@@ -5,10 +5,6 @@
 #
 #   Below is the Service class. To use it, simply subclass it and implement the run() method.
 #
-#
-#   Based on class daemon.py http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
-#   Version for python 2.x. If you need version for python 3.x http://www.jejik.com/files/examples/daemon3x.py
-#
 __author__ = 'Andrey Usov <http://devel.ownport.net>'
 __version__ = '0.1'
 __license__ = """
