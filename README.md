@@ -3,6 +3,10 @@ pyservice
 
 simple library to make service on python more easy
 
+### TODO
+
+ - handle cases correctly when process is killed
+
 ### Links
 
 Based on class [daemon.py](http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/)
