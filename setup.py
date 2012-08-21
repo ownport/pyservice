@@ -19,7 +19,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: POSIX :: Linux',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        
     ],
+    entry_points={
+        'console_scripts': ['pyservice = pyservice.runner:run_service']},
 )
 
