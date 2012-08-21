@@ -1,3 +1,3 @@
 test:
-	python tests/testall.py
+	python tests/test_servce.py
 
