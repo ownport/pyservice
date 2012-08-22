@@ -21,39 +21,6 @@ sys.path.insert(0, os.getcwd())
 
 logger = logging.getLogger(__name__)
 
-def run_service():
-    parser = argparse.ArgumentParser(prog="pyservice", add_help=False)
-    parser.add_argument("-v", "--version",
-        action="version", version="%(prog)s {}".format(pyservice.__version__))
-    parser.add_argument("-h", "--help", action="store_true", help="""
-        show program's help text and exit
-        """.strip())
-    parser.add_argument("-d", "--daemonize", action="store_true", help="""
-        daemonize the service process
-        """.strip())
-    parser.add_argument("target", nargs='?', help="""
-        service class path to run (modulename.ServiceClass) or
-        configuration file path to use (/path/to/config.py)
-        """.strip())
-    args = parser.parse_args()
-    if args.help:
-        parser.print_help()
-        if args.target:
-            print # blank line
-            try:
-                app = setup_process(args.target)
-                app.config.print_help()
-            except RuntimeError, e:
-                parser.error(e)
-    else:
-        if args.target:
-            try:
-                ControlInterface().start(args.target, args.daemonize)
-            except RuntimeError, e:
-                parser.error(e)
-        else:
-            parser.print_usage()
-
 # -----------------------------------------------------
 #   classes
 # -----------------------------------------------------
