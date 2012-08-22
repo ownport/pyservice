@@ -7,13 +7,30 @@ digraph pyservice {
     // Nodes
     
     run_service         [label="def run_service()"];
+    
     service_control     [label="<top>       class ServiceControl |\
                                 <start>     - start(pid or target) |\
                                 <stop>      - stop(pid or target) |\
                                 <restart>   - restart(pid or target) |\
                                 <status>    - status(pid or target)"];
+                                
+    service             [label="<top> class Service |\
+                                <start>     - start(pid or target) |\
+                                <stop>      - stop(pid or target) |\
+                                <restart>   - restart(pid or target) |\
+                                <status>    - status(pid or target)"];
+
+    pidfile             [label="<top> class PIDFile"];
+    logfile             [label="<top> class LogFile"];
+    process             [label="<top> class Process |\
+                                <run>       - run()"];
 
     //  Links
     run_service -> service_control:top [label="action, (pid or target)"];
+    service_control:start -> service:start;
+    service:top -> process:top;
+    service:top -> pidfile:top;
+    service:top -> logfile:top;
+    process:top -> logfile:top;
        
 }
