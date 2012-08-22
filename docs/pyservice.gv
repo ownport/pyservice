@@ -1,0 +1,19 @@
+digraph pyservice {
+
+    graph [ rankdir = "LR" ];
+    node [shape=record,fontname=Arial,fontsize=9];
+    edge [arrowsize=0.5,fontname=Arial,fontsize=9];
+
+    // Nodes
+    
+    run_service         [label="def run_service()"];
+    service_control     [label="<top>       class ServiceControl |\
+                                <start>     - start(pid or target) |\
+                                <stop>      - stop(pid or target) |\
+                                <restart>   - restart(pid or target) |\
+                                <status>    - status(pid or target)"];
+
+    //  Links
+    run_service -> service_control:top [label="action, (pid or target)"];
+       
+}
