@@ -5,4 +5,6 @@ test:
 
 graph:
 	dot -T png docs/pyservice.gv -o docs/pyservice.png && eog docs/pyservice.png
+
+# TODO automatic generate to-do list based from code
 	
