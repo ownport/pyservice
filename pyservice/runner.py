@@ -44,26 +44,26 @@ class ServiceControl(object):
         ''' start process '''
         
         print "Starting process with {}...".format(process_path)
-        service_factory = load_process(process_path)
-        if callable(service_factory):
-            return pyservice.core.Service(service_factory)
+        process = load_process(process_path)
+        if callable(process):
+            pyservice.core.Service(process).start()
         else:
-            raise RuntimeError("Does not appear to be a valid service factory")    
+            raise RuntimeError("The process {} is not valid".format(process_path))    
                 
-    def stop(self, pid):
+    def stop(self, process_path):
         if self._validate(pid):
             print "Stopping process {}...".format(pid)
             os.kill(pid, STOP_SIGNAL)
             
-    def restart(self, target):
+    def restart(self, process_path):
         self.stop(resolve_pid(target=target))
         self.start(target)
 
-    def status(self, pid):
+    def status(self, process_path):
         if self._validate(pid):
             print "Process is running as {}.".format(pid)
 
-    def _validate(self, pid):
+    def _validate(self, process_path):
         try:
             os.kill(pid, 0)
             return pid
