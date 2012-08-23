@@ -1,6 +1,7 @@
 ''' utils '''
 
 import os
+import sys
 import runpy
 import errno
 import logging
@@ -16,7 +17,11 @@ def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
     logging.basicConfig(format=output_format, filename = logfile, level=logging.DEBUG)
 
 def load_process(process_path):
-    ''' load process '''
+    ''' load process 
+    
+    PEP 338 - Executing modules as scripts
+    http://www.python.org/dev/peps/pep-0338
+    '''
     if '.' not in process_path:
         raise RuntimeError("Invalid process path")
 
@@ -33,7 +38,7 @@ def load_process(process_path):
             # If the bottommost frame in our stack was in pkgutil,
             # then we can safely say that this ImportError occurred
             # because the top level class path was not found.
-            raise RuntimeError("Unable to load class path: {}:\n{}".format(process_path, e))
+            raise RuntimeError("Unable to load process path: {}:\n{}".format(process_path, e))
         else:
             # If the ImportError occurred further down,
             # raise original exception.
@@ -41,7 +46,7 @@ def load_process(process_path):
     try:
         return module[process_name]
     except KeyError, e:
-        raise RuntimeError("Unable to find class in module: {}".format(process_path))
+        raise RuntimeError("Unable to find process in module: {}".format(process_path))
         
 #
 #   Pidfile
@@ -76,7 +81,6 @@ class Pidfile(object):
 
         # set permissions to -rw-r--r-- 
         os.chmod(self.fname, 420)
-
             
     def unlink(self):
         """ delete pidfile"""

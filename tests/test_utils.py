@@ -20,13 +20,13 @@ class UtilsTests(unittest.TestCase):
         self.assertRaises(RuntimeError, load_process, 'examples.simple_process')
         
         self.assertEqual(
-            load_process('examples.simple_process.SimpleProcess').__name__, 
+            load_process('tests.processes.simple_process.SimpleProcess').__name__, 
             'SimpleProcess')
         self.assertEqual(
-            load_process('examples.few_simple_process.SimpleProcess1').__name__, 
+            load_process('tests.processes.few_simple_process.SimpleProcess1').__name__, 
             'SimpleProcess1')
         self.assertEqual(
-            load_process('examples.few_simple_process.SimpleProcess2').__name__, 
+            load_process('tests.processes.few_simple_process.SimpleProcess2').__name__, 
             'SimpleProcess2')
         
 

@@ -34,17 +34,25 @@ class Service(object):
     """ Service class  """
     
     def __init__(self, process):
+        ''' init '''
         
-        print 'process: ', process
-        print 'process.pidfile: ', process.pidfile
-        print 'process.logfile: ', process.logfile
-        print dir(process)
-
-        '''
-        self.__pidfile = Pidfile(pidfile)
-        if logfile:
-            set_logging(logfile)            
-        '''
+        self.process = process
+        self.pidfile = Pidfile(process.pidfile)
+        if process.logfile:
+            set_logging(process.logfile)            
+    
+    def _fork(self, fid):
+        ''' fid - fork id'''
+        
+        try: 
+            pid = os.fork() 
+            if pid > 0:
+                # exit from parent
+                sys.exit(0) 
+        except OSError, e: 
+            # sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
+            logging.error("service.daemonize(), fork #%d failed: %d (%s)\n" % (fid, e.errno, e.strerror))
+            sys.exit(1)        
     
     def daemonize(self):
         """
@@ -52,73 +60,42 @@ class Service(object):
         Programming in the UNIX Environment" for details (ISBN 0201563177)
         http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
         """
-        try: 
-            pid = os.fork() 
-            if pid > 0:
-                # exit first parent
-                sys.exit(0) 
-        except OSError, e: 
-            # sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-            logging.error("service.daemonize(), fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1)
+        self._fork(1) # first fork
     
         # decouple from parent environment
         os.chdir("/") 
         os.setsid() 
         os.umask(0) 
     
-        # do second fork
-        try: 
-            pid = os.fork() 
-            if pid > 0:
-                # exit from second parent
-                sys.exit(0) 
-        except OSError, e: 
-            # sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-            logging.error("service.daemonize(), fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-            sys.exit(1) 
+        self._fork(2)
         
         # write pidfile
         atexit.register(self.remove_pid)
-        pid = str(os.getpid())
         try:
-            pfile = open(self.__pidfile,'w')
-            pfile.write("%s\n" % pid)
-            pfile.close()
-        except IOError, e:
+            self.pidfile.create()
+        except RuntimeError, e:
             logging.error('service.daemonize(), %s' % str(e))
             sys.exit(1)
-        logging.info('service.daemonize(), service [%s] started, pidfile: %s' % (pid, self.__pidfile))
+        logging.info('service.daemonize(), process [%s] started' % self.process.__name__)
     
     def remove_pid(self):
-        if os.path.isfile(self.__pidfile):
-            os.remove(self.__pidfile)
+        if self.pidfile.validate():
+            self.pidfile.unlink()
         logging.info('service.remove_pid(), service was stopped')
 
     def start(self):
         """
         Start the service
         """
-        return
         # Check for a pidfile to see if the service already runs
-        try:
-            pf = file(self.__pidfile,'r')
-            pid = int(pf.read().strip())
-            pf.close()
-        except IOError:
-            pid = None
-        except ValueError:
-            pid = None
-    
-        if pid:
-            message = "service.start(), pidfile %s already exist. Service is running already\n"
-            # sys.stderr.write(message % self.__pidfile)
-            logging.error(message % self.__pidfile)
+        if self.pidfile.validate():
+            message = "service.start(), pidfile %s exists. Service is running already\n"
+            logging.error(message % self.pidfile.pid)
             sys.exit(1)
-        
+            
         # Start the service
         self.daemonize()
-        self.run()
+        self.process().run()
 
     def stop(self):
         """
