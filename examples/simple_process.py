@@ -1,4 +1,4 @@
 import pyservice
 
-class SimpleProcess(pyservice.core.Process):
+class SimpleProcess(pyservice.Process):
     pass
