@@ -60,6 +60,8 @@ class Service(object):
         Programming in the UNIX Environment" for details (ISBN 0201563177)
         http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
         """
+        # TODO check why processes are running twice
+        
         self._fork(1) # first fork
     
         # decouple from parent environment
