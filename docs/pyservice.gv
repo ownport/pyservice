@@ -20,8 +20,11 @@ digraph pyservice {
                                 <restart>   - restart(pid or target) |\
                                 <status>    - status(pid or target)"];
 
-    pidfile             [label="<top> class PIDFile"];
-    logfile             [label="<top> class LogFile"];
+    pidfile             [label="<top> class Pidfile |\
+                                <create>    - create() |\
+                                <validate>  - validate() |\
+                                <unlink>    - unlink()"];
+    logging             [label="<top> def set_logging"];
     process             [label="<top> class Process |\
                                 <run>       - run()"];
 
@@ -30,7 +33,7 @@ digraph pyservice {
     service_control:start -> service:start;
     service:top -> process:top;
     service:top -> pidfile:top;
-    service:top -> logfile:top;
-    process:top -> logfile:top;
+    service:top -> logging:top;
+    process:top -> logging:top;
        
 }
