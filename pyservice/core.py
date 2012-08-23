@@ -20,6 +20,9 @@ sys.path.insert(0, os.getcwd())
 # -----------------------------------------------------
 class Process(object):
     
+    pidfile = None  # Override this field for your class
+    logfile = None  # Override this field for your class
+    
     def run(self):
         """
         You should override this method when you subclass Process. It will be called after the process has been
@@ -28,16 +31,20 @@ class Process(object):
         pass
 
 class Service(object):
-    """
-    A generic service class.
+    """ Service class  """
     
-    Usage: subclass the Service class and override the run() method
-    """
-    def __init__(self, pidfile, logfile=None):
+    def __init__(self, process):
+        
+        print 'process: ', process
+        print 'process.pidfile: ', process.pidfile
+        print 'process.logfile: ', process.logfile
+        print dir(process)
 
+        '''
         self.__pidfile = Pidfile(pidfile)
         if logfile:
             set_logging(logfile)            
+        '''
     
     def daemonize(self):
         """
@@ -92,6 +99,7 @@ class Service(object):
         """
         Start the service
         """
+        return
         # Check for a pidfile to see if the service already runs
         try:
             pf = file(self.__pidfile,'r')

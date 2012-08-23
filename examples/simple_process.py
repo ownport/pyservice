@@ -1,4 +1,9 @@
 import pyservice
 
 class SimpleProcess(pyservice.Process):
-    pass
+    
+    pidfile = ''
+    logfile = ''
+    
+    def run(self):
+        pass
