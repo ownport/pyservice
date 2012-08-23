@@ -48,11 +48,11 @@ class Service(object):
             pid = os.fork() 
             if pid > 0:
                 # exit from parent
-                sys.exit(0) 
+                return 
         except OSError, e: 
             # sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
             logging.error("service.daemonize(), fork #%d failed: %d (%s)\n" % (fid, e.errno, e.strerror))
-            sys.exit(1)        
+            raise OSError(e)       
     
     def daemonize(self):
         """
@@ -73,10 +73,11 @@ class Service(object):
         atexit.register(self.remove_pid)
         try:
             self.pidfile.create()
-        except RuntimeError, e:
-            logging.error('service.daemonize(), %s' % str(e))
-            sys.exit(1)
+        except RuntimeError, err:
+            logging.error('service.daemonize(), %s' % str(err))
+            return False
         logging.info('service.daemonize(), process [%s] started' % self.process.__name__)
+        return True
     
     def remove_pid(self):
         if self.pidfile.validate():
@@ -94,8 +95,8 @@ class Service(object):
             sys.exit(1)
             
         # Start the service
-        self.daemonize()
-        self.process().run()
+        if self.daemonize():
+            self.process().run()
 
     def stop(self):
         """
@@ -127,7 +128,7 @@ class Service(object):
                     os.remove(self.__pidfile)
             else:
                 loggin.error('service.stop(), %s' % str(err))
-                sys.exit(1)
+                raise OSError(err)
         logging.info('service.stop(), service [%s] was stopped' % pid)
 
     def restart(self):
