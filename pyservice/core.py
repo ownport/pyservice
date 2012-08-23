@@ -1,10 +1,4 @@
-#!/usr/bin/env python
-# -*- codeing: utf-8 -*-
-#
-#   service.py
-#
-#   Below is the Service class. To use it, simply subclass it and implement the run() method.
-#
+''' core '''
 
 import os
 import sys
@@ -12,18 +6,27 @@ import time
 import signal
 import atexit
 import logging
-import argparse
+
+from .utils import Pidfile
+from .utils import set_logging
 
 SIGNAL_STOP = signal.SIGTERM
 SIGNAL_RELOAD = signal.SIGHUP
 
 sys.path.insert(0, os.getcwd())
 
-logger = logging.getLogger(__name__)
-
 # -----------------------------------------------------
 #   classes
 # -----------------------------------------------------
+class Process(object):
+    
+    def run(self):
+        """
+        You should override this method when you subclass Process. It will be called after the process has been
+        daemonized by start() or restart() via Service class.
+        """
+        pass
+
 class Service(object):
     """
     A generic service class.
@@ -31,18 +34,10 @@ class Service(object):
     Usage: subclass the Service class and override the run() method
     """
     def __init__(self, pidfile, logfile=None):
-        '''
-        pidfile
-        logfile
-        '''
-        self.__pidfile = pidfile
-        try:
-            logging.basicConfig(format='%(asctime)s pid:%(process)d <%(levelname)s> %(message)s', 
-                                filename = logfile, 
-                                level=logging.DEBUG)
-        except IOError, e:
-            print str(e)
-            sys.exit(1)
+
+        self.__pidfile = Pidfile(pidfile)
+        if logfile:
+            set_logging(logfile)            
     
     def daemonize(self):
         """
@@ -108,7 +103,7 @@ class Service(object):
             pid = None
     
         if pid:
-            message = "service.start(), pidfile %s already exist. Service is already running\n"
+            message = "service.start(), pidfile %s already exist. Service is running already\n"
             # sys.stderr.write(message % self.__pidfile)
             logging.error(message % self.__pidfile)
             sys.exit(1)
@@ -159,12 +154,6 @@ class Service(object):
         self.start()
         logging.info('service.restart(), service restarted')
 
-    def run(self):
-        """
-        You should override this method when you subclass Service. It will be called after the process has been
-        daemonized by start() or restart().
-        """
-        pass
 
 
 
