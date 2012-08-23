@@ -7,6 +7,8 @@ from pyservice.utils import load_process
 
 
 def run_service():
+    # TODO fix issue with correct help presentation when process is not exist
+    # TODO incorrect handling when pid file is empty or None
 
     import argparse
 
@@ -31,12 +33,16 @@ def run_service():
     if args.help:
         parser.print_help()
     try:
-        if args.action in "start stop restart reload status".split():
-            if not args.process:
-                parser.error("You need to specify a process for {}".format(args.action))
-            getattr(ServiceControl(), args.action)(args.process)
+        if args.process:
+            if args.action in "start stop restart reload status".split():
+                if not args.process:
+                    parser.error("You need to specify a process for {}".format(args.action))
+                getattr(ServiceControl(), args.action)(args.process)
+            else:
+                print 'Please specify action for {}\n'.format(args.process)
+                parser.print_help()
         else:
-            print 'Please specify action for {}\n'.format(args.process)
+            print 'Please specify process\n'
             parser.print_help()
     except RuntimeError, e:
         parser.error(e)    
