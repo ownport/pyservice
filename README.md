@@ -7,7 +7,7 @@ The pyservice is responsible for creating a "container" to run services in, and 
 
 The "ControlInterface" class models the commands you can use to start or control a daemonized service. This is exposed via one command line utilities "pyservice" which have the entry point defined in this module.
 
-The runner module (service.py) and command line utilities (pyservice) are completely optional. You can always just write your own Python script or console command that takes your application service.
+The runner module (runner.py) and command line utilities (pyservice) are completely optional. You can always just write your own Python script or console command that takes your application service.
 
 
 ### TODO
