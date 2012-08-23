@@ -43,6 +43,13 @@ class RunnerTests(unittest.TestCase):
         sys.argv.append('dummy_process')
         runner.run_service()
 
+class ServiceControlTests(unittest.TestCase):
+    
+    def test_service_control_start(self):
+        self.assertEqual(runner.ServiceControl().start('examples.simple_process.SimpleProcess'), None)
+
+    
+
 
 if __name__ == '__main__':
     unittest.main()        

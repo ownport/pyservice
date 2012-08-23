@@ -3,6 +3,8 @@
 import sys
 import pyservice
 
+from pyservice.utils import load_process
+
 def run_service():
 
     import argparse
@@ -13,11 +15,8 @@ def run_service():
     parser.add_argument("-h", "--help", action="store_true", help="""
         show program's help text and exit
         """.strip())
-    parser.add_argument("-p", "--pid", help="""
-        pid or pidfile to use instead of target
-        """.strip())
-    parser.add_argument("target", nargs='?', help="""
-        service class path to run (modulename.ServiceClass) or
+    parser.add_argument("process", nargs='?', help="""
+        process class path to run (modulename.ProcessClass) or
         configuration file path to use (/path/to/config.py)
         """.strip())
     parser.add_argument("action",
@@ -31,50 +30,44 @@ def run_service():
     
     if args.help:
         parser.print_help()
-    elif args.pid and args.target:
-        parser.error("You cannot specify both a target and a pid")
     try:
         if args.action in "start stop restart reload status".split():
-            if not args.target or not args.pid:
-                parser.error("You need to specify a target or a pid for {}".format(args.action))
-            getattr(ControlInterface(), args.action)(resolve_pid(args.pid, args.target))
+            if not args.process:
+                parser.error("You need to specify a process for {}".format(args.action))
+            getattr(ServiceControl(), args.action)(args.process)
     except RuntimeError, e:
         parser.error(e)    
-
-def resolve_pid(pid=None, target=None):
-    if pid and not os.path.exists(pid):
-        return int(pid)
-    if target is not None:
-        # TODO get pid from process code
-        # setup_process(target, daemonize=True)
-        # pid = ginkgo.settings.get("pidfile")
-        pass
-    if pid is not None:
-        if os.path.exists(pid):
-            with open(pid, "r") as f:
-                pid = f.read().strip()
-            return int(pid)
+    
+class ServiceControl(object):
+    
+    def start(self, process_path):
+        ''' start process '''
+        
+        print "Starting process with {}...".format(process_path)
+        service_factory = load_process(process_path)
+        if callable(service_factory):
+            return pyservice.core.Service(service_factory)
         else:
-            return
-    raise RuntimeError("Unable to resolve pid from {}".format(pid or target))
-    
-class ControlInterface(object):
-    
-    def start(self, target):
-        pass
-    
-    def restart(self, target):
-        pass
-    
+            raise RuntimeError("Does not appear to be a valid service factory")    
+                
     def stop(self, pid):
-        pass
-
-    def reload(self, pid):
-        pass
+        if self._validate(pid):
+            print "Stopping process {}...".format(pid)
+            os.kill(pid, STOP_SIGNAL)
+            
+    def restart(self, target):
+        self.stop(resolve_pid(target=target))
+        self.start(target)
 
     def status(self, pid):
-        pass
-    
+        if self._validate(pid):
+            print "Process is running as {}.".format(pid)
 
-if __name__ == '__main__':
-    run_service()            
+    def _validate(self, pid):
+        try:
+            os.kill(pid, 0)
+            return pid
+        except (OSError, TypeError):
+            print "Process is NOT running."
+
+

@@ -1,9 +1,13 @@
 ''' utils '''
 
 import os
+import runpy
 import errno
 import logging
 
+#
+#   Logging
+#
 DEFAULT_FORMAT = "%(asctime)s pid:%(process)d/%(module)s <%(levelname)s> %(message)s"
 
 def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
@@ -11,6 +15,37 @@ def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
     
     logging.basicConfig(format=output_format, filename = logfile, level=logging.DEBUG)
 
+def load_process(process_path):
+    ''' load process '''
+    if '.' not in process_path:
+        raise RuntimeError("Invalid process path")
+
+    module_name, process_name = process_path.rsplit('.', 1)
+    try:
+        try:
+            module = runpy.run_module(module_name)
+        except ImportError:
+            module = runpy.run_module(module_name + ".__init__")
+    except ImportError, e:
+        import traceback, pkgutil
+        tb_tups = traceback.extract_tb(sys.exc_info()[2])
+        if pkgutil.__file__.startswith(tb_tups[-1][0]):
+            # If the bottommost frame in our stack was in pkgutil,
+            # then we can safely say that this ImportError occurred
+            # because the top level class path was not found.
+            raise RuntimeError("Unable to load class path: {}:\n{}".format(process_path, e))
+        else:
+            # If the ImportError occurred further down,
+            # raise original exception.
+            raise
+    try:
+        return module[process_name]
+    except KeyError, e:
+        raise RuntimeError("Unable to find class in module: {}".format(process_path))
+        
+#
+#   Pidfile
+#
 
 class Pidfile(object):
     ''' Manage a PID file '''
