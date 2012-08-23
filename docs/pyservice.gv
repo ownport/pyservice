@@ -24,8 +24,12 @@ digraph pyservice {
                                 <create>    - create() |\
                                 <validate>  - validate() |\
                                 <unlink>    - unlink()"];
+                                
     logging             [label="<top> def set_logging"];
+    
     process             [label="<top> class Process |\
+                                <pidfile>   pidfile |\
+                                <logfile>   logfile |\
                                 <run>       - run()"];
 
     //  Links
