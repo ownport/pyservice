@@ -1,80 +1,62 @@
 ''' utils '''
 
 import os
+import errno
+import logging
 
-def resolve_pid(pid=None, target=None):
-    if pid and not os.path.exists(pid):
-        return int(pid)
-        
-    if target is not None:
-        # TODO get pid from process code
-        # setup_process(target, daemonize=True)
-        # pid = ginkgo.settings.get("pidfile")
-        pass
-    if pid is not None:
-        if os.path.exists(pid):
-            with open(pid, "r") as f:
-                pid = f.read().strip()
-            return int(pid)
-        else:
-            return
-    raise RuntimeError("Unable to resolve pid from {}".format(pid or target))
+DEFAULT_FORMAT = "%(asctime)s pid:%(process)d/%(module)s <%(levelname)s> %(message)s"
+
+def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
+    ''' set logging '''
+    
+    logging.basicConfig(format=output_format, filename = logfile, level=logging.DEBUG)
 
 
 class Pidfile(object):
-    """\
-    Manage a PID file. If a specific name is provided
-    it and '"%s.oldpid" % name' will be used. Otherwise
-    we create a temp file using os.mkstemp.
-    """
+    ''' Manage a PID file '''
 
     def __init__(self, fname):
         self.fname = fname
         self.pid = None
 
-    def create(self, pid):
-        oldpid = self.validate()
-        if oldpid:
-            if oldpid == os.getpid():
+    def create(self):
+        ''' create pid file '''
+        pid = self.validate()
+        if pid:
+            if pid == os.getpid():
                 return
             raise RuntimeError("Already running on PID %s " \
-                "(or pid file '%s' is stale)" % (os.getpid(), self.fname))
-
-        self.pid = pid
+                "(or pid file '%s' is stale)" % (os.getpid(), self.fname))            
+                
+        self.pid = os.getpid()
 
         # Write pidfile
         fdir = os.path.dirname(self.fname)
         if fdir and not os.path.isdir(fdir):
             raise RuntimeError("%s doesn't exist. Can't create pidfile." % fdir)
-        fd, fname = tempfile.mkstemp(dir=fdir)
-        os.write(fd, "%s\n" % self.pid)
-        if self.fname:
-            os.rename(fname, self.fname)
-        else:
-            self.fname = fname
-        os.close(fd)
+
+        pfile = open(self.fname,'w')
+        pfile.write("%s\n" % self.pid)
+        pfile.close()
 
         # set permissions to -rw-r--r-- 
         os.chmod(self.fname, 420)
 
-    def rename(self, path):
-        self.unlink()
-        self.fname = path
-        self.create(self.pid)
-
+            
     def unlink(self):
         """ delete pidfile"""
         try:
             with open(self.fname, "r") as f:
-                pid1 =  int(f.read() or 0)
+                pid_in_file =  int(f.read() or 0)
 
-            if pid1 == self.pid:
+            if pid_in_file == self.pid:
                 os.unlink(self.fname)
         except:
             pass
 
     def validate(self):
         """ Validate pidfile and make it stale if needed"""
+        # TODO reveiw the code
         if not self.fname:
             return
         try:
@@ -95,3 +77,5 @@ class Pidfile(object):
             if e[0] == errno.ENOENT:
                 return
             raise
+
+
