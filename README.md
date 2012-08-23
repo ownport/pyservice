@@ -18,4 +18,4 @@ The runner module (runner.py) and command line utilities (pyservice) are complet
 
  - [How do I get my program to act like a daemon?](http://www.svbug.com/documentation/comp.unix.programmer-FAQ/faq_2.html#SEC16)
  - [PEP: 3143, Standard daemon process library](http://www.python.org/dev/peps/pep-3143/)
-
+ - [Building a python daemon process](http://www.gavinj.net/2012/06/building-python-daemon-process.html)
