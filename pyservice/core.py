@@ -6,6 +6,7 @@ import time
 import signal
 import atexit
 import logging
+import resource
 
 from .utils import Pidfile
 from .utils import set_logging
@@ -20,13 +21,16 @@ sys.path.insert(0, os.getcwd())
 # -----------------------------------------------------
 class Process(object):
     
+    # TODO add support to logging process by own name
+    
     pidfile = None  # Override this field for your class
     logfile = None  # Override this field for your class
     
     def run(self):
         """
-        You should override this method when you subclass Process. It will be called after the process has been
-        daemonized by start() or restart() via Service class.
+        You should override this method when you subclass Process. 
+        It will be called after the process has been daemonized by 
+        start() or restart() via Service class.
         """
         pass
 
@@ -39,20 +43,20 @@ class Service(object):
         self.process = process
         self.pidfile = Pidfile(process.pidfile)
         if process.logfile:
-            set_logging(process.logfile)            
-    
+            set_logging(process.logfile)  
+            self.logger = logging.getLogger(process.__name__)          
+
+
     def _fork(self, fid):
         ''' fid - fork id'''
         
         try: 
             pid = os.fork() 
-            if pid > 0:
-                # exit from parent
-                return 
         except OSError, e: 
-            # sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-            logging.error("service.daemonize(), fork #%d failed: %d (%s)\n" % (fid, e.errno, e.strerror))
-            raise OSError(e)       
+            logging.error(
+                "service._fork(), fork #%d failed: %d (%s)\n" % (fid, e.errno, e.strerror))
+            raise OSError(e)  
+        return pid
     
     def daemonize(self):
         """
@@ -62,23 +66,40 @@ class Service(object):
         """
         # TODO check why processes are running twice
         
-        self._fork(1) # first fork
+        # Default maximum for the number of available file descriptors.
+        MAXFD = 1024
+
+        # The standard I/O file descriptors are redirected to /dev/null by default.
+        if (hasattr(os, "devnull")):
+            REDIRECT_TO = os.devnull
+        else:
+            REDIRECT_TO = "/dev/null"
+
+        pid = self._fork(1) # first fork
     
-        # decouple from parent environment
-        os.chdir("/") 
-        os.setsid() 
-        os.umask(0) 
-    
-        self._fork(2)
-        
+        if pid == 0:
+            os.setsid()
+            
+            pid = self._fork(2)
+            if pid == 0:
+                os.chdir("/") 
+                os.umask(0) 
+            else:
+                os._exit(0)
+        else:
+            os._exit(0)             
+
         # write pidfile
         atexit.register(self.remove_pid)
-        try:
-            self.pidfile.create()
-        except RuntimeError, err:
-            logging.error('service.daemonize(), %s' % str(err))
-            return False
-        logging.info('service.daemonize(), process [%s] started' % self.process.__name__)
+
+        # This call to open is guaranteed to return the lowest file descriptor,
+        # which will be 0 (stdin), since it was closed above.
+        os.open(REDIRECT_TO, os.O_RDWR)	# standard input (0)
+
+        # Duplicate standard input to standard output and standard error.
+        os.dup2(0, 1)			# standard output (1)
+        os.dup2(0, 2)			# standard error (2)
+
         return True
     
     def remove_pid(self):
@@ -91,14 +112,23 @@ class Service(object):
         Start the service
         """
         # Check for a pidfile to see if the service already runs
-        if self.pidfile.validate():
-            message = "service.start(), pidfile %s exists. Service is running already\n"
-            logging.error(message % self.pidfile.pid)
-            sys.exit(1)
-            
+        current_pid = self.pidfile.validate()
+        if current_pid:
+            message = "service.start(), pidfile %s exists. Service is running already"
+            logging.error(message % current_pid)
+            return
+
         # Start the service
         if self.daemonize():
+            # create pid file
+            try:
+                self.pidfile.create()
+            except RuntimeError, err:
+                logging.error('service.start(), %s' % str(err))
+                return
+            logging.info('service.start(), process [%s] started' % self.process.__name__)
             self.process().run()
+
 
     def stop(self):
         """
