@@ -170,4 +170,8 @@ if (pid == 0):	# The first child.
 
    return(0)
 ```
+### Links
+
+ - [File creation mode mask](http://stackoverflow.com/questions/7141793/file-creation-mode-mask)
+ 
 
