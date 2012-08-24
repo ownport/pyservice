@@ -19,6 +19,11 @@ def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
     
     logging.basicConfig(format=output_format, filename = logfile, level=logging.DEBUG)
 
+def logging_file_descriptors():
+    ''' logging file descriptors are used in core.Service.daemonize() '''
+    return [handler.stream.fileno() for handler in [wr() for wr in
+            logging._handlerList] if isinstance(handler, logging.FileHandler)]
+
 def load_process(process_path):
     ''' load process 
     
