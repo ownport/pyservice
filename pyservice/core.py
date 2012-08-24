@@ -148,15 +148,6 @@ class Service(object):
                 raise OSError(err)
         logging.info('service.stop(), service [%s] was stopped' % pid)
 
-    def restart(self):
-        """
-        Restart the service
-        """
-        logging.info('service.restart(), service restarting')
-        self.stop()
-        self.start()
-        logging.info('service.restart(), service restart completed')
-
 
 
 
