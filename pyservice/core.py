@@ -11,9 +11,6 @@ import resource
 from .utils import Pidfile
 from .utils import set_logging
 
-SIGNAL_STOP = signal.SIGTERM
-SIGNAL_RELOAD = signal.SIGHUP
-
 sys.path.insert(0, os.getcwd())
 
 # -----------------------------------------------------
@@ -129,30 +126,23 @@ class Service(object):
         """
         Stop the service
         """
-        # Get the pid from the pidfile
-        try:
-            pf = file(self.__pidfile,'r')
-            pid = int(pf.read().strip())
-            pf.close()
-        except IOError:
-            pid = None
-    
+        pid = self.pidfile.validate()
         if not pid:
-            message = "service.stop(), pidfile %s does not exist. Service is not running\n"
+            message = "service.stop(), pidfile %s does not exist. Service is not running"
             # sys.stderr.write(message % self.__pidfile)
-            logging.error(message % self.__pidfile)
+            logging.error(message % self.pidfile.fname)
             return # not an error in a restart
 
         # Try killing the service process    
         try:
             while 1:
-                os.kill(pid, SIGTERM)
+                os.kill(pid, signal.SIGTERM)
                 time.sleep(0.1)
         except OSError, err:
             err = str(err)
             if err.find("No such process") > 0:
-                if os.path.exists(self.__pidfile):
-                    os.remove(self.__pidfile)
+                if self.pidfile.validate():
+                    self.pidfile.unlink()
             else:
                 loggin.error('service.stop(), %s' % str(err))
                 raise OSError(err)
@@ -165,7 +155,7 @@ class Service(object):
         logging.info('service.restart(), service restarting')
         self.stop()
         self.start()
-        logging.info('service.restart(), service restarted')
+        logging.info('service.restart(), service restart completed')
 
 
 
