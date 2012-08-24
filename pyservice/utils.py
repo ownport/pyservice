@@ -9,7 +9,10 @@ import logging
 #
 #   Logging
 #
-DEFAULT_FORMAT = "%(asctime)s pid:%(process)d/%(module)s <%(levelname)s> %(message)s"
+
+# TODO make logging more useful for debugging
+
+DEFAULT_FORMAT = "%(asctime)s pid:%(process)d <%(levelname)s> %(message)s"
 
 def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
     ''' set logging '''
