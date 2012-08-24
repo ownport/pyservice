@@ -31,7 +31,7 @@ def load_process(process_path):
     http://www.python.org/dev/peps/pep-0338
     '''
     if '.' not in process_path:
-        raise RuntimeError("Invalid process path")
+        raise RuntimeError("Invalid process path: {}".format(process_path))
 
     module_name, process_name = process_path.rsplit('.', 1)
     try:
