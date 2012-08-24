@@ -8,17 +8,16 @@ digraph pyservice {
     
     run_service         [label="def run_service()"];
     
-    service_control     [label="<top>       class ServiceControl |\
-                                <start>     - start(process) |\
-                                <stop>      - stop(process) |\
-                                <restart>   - restart(process) |\
-                                <status>    - status(process)"];
+    service_control     [label="<top>       class ServiceControl(process) |\
+                                <start>     - start() |\
+                                <stop>      - stop() |\
+                                <restart>   - restart() |\
+                                <status>    - status()"];
                                 
-    service             [label="<top> class Service |\
-                                <start>     - start(process) |\
-                                <stop>      - stop(process) |\
-                                <restart>   - restart(process) |\
-                                <status>    - status(process)"];
+    service             [label="<top> class Service(process) |\
+                                <start>     - start() |\
+                                <stop>      - stop() |\
+                                <status>    - status()"];
 
     pidfile             [label="<top> class Pidfile |\
                                 <create>    - create() |\
@@ -35,6 +34,9 @@ digraph pyservice {
     //  Links
     run_service -> service_control:top [label="action, process"];
     service_control:start -> service:start;
+    service_control:stop -> service:stop;
+    service_control:restart -> service_control:start;
+    service_control:restart -> service_control:stop;
     service:top -> process:top;
     service:top -> pidfile:top;
     service:top -> logging:top;
