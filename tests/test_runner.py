@@ -4,10 +4,11 @@ import unittest
 from pyservice import runner
 from cStringIO import StringIO
 
-sys.stdout = my_stdout = StringIO()
-sys.stderr = my_stderr = StringIO()
-sys.exit = lambda x: x
+#sys.stdout = my_stdout = StringIO()
+#sys.stderr = my_stderr = StringIO()
+#sys.exit = lambda x: x
 
+# TODO make runner tests more actual
 
 class RunnerTests(unittest.TestCase):
         
@@ -37,7 +38,7 @@ class RunnerTests(unittest.TestCase):
         sys.argv.append('start')
         runner.run_service()
 
-    def test_runner_by_p9rocess_name_no_action(self):
+    def test_runner_by_process_name_no_action(self):
         sys.argv = list()    
         sys.argv.append('pyservice')
         sys.argv.append('dummy_process')
