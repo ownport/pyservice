@@ -1,7 +1,7 @@
 """ pyservice module """
 
 __author__ = 'Andrey Usov <http://devel.ownport.net>'
-__version__ = '0.1'
+__version__ = '0.2.1'
 __license__ = """
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
