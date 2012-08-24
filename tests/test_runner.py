@@ -12,23 +12,10 @@ from cStringIO import StringIO
 
 class RunnerTests(unittest.TestCase):
         
-    def test_runner_check_version(self):
-        sys.argv = list()    
-        sys.argv.append('pyservice')
-        sys.argv.append('-v')
-        runner.run_service()
-
     def test_runner_show_help(self):
         sys.argv = list()    
         sys.argv.append('pyservice')
         sys.argv.append('-h')
-        runner.run_service()
-
-    def test_runner_by_pid(self):
-        sys.argv = list()    
-        sys.argv.append('pyservice')
-        sys.argv.append('-p')
-        sys.argv.append('1000')
         runner.run_service()
 
     def test_runner_by_process_name(self):

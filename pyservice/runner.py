@@ -29,10 +29,11 @@ def run_service():
     except TypeError:
         parser.print_help()
         return
-    
+        
     if args.help:
         parser.print_help()
         return
+
     try:
         if args.process and args.action in "start stop restart reload status".split():
             if not args.process:
