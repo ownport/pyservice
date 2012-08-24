@@ -65,6 +65,7 @@ class Service(object):
         http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
         """
         # TODO check why processes are running twice
+        # TODO handle file descriptors, logging
         
         # Default maximum for the number of available file descriptors.
         MAXFD = 1024
