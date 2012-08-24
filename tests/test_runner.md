@@ -48,5 +48,66 @@ optional arguments:
   -h, --help            show program's help text and exit
 
 ```
+Show pyservice help with flag -h
+>>> sys.argv = list()
+>>> sys.argv.append('pyservice.py')
+>>> sys.argv.append('-h')
+>>> runner.run_service()
+usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
+<BLANKLINE>
+positional arguments:
+  process               process class path to run (modulename.ProcessClass) or
+                        configuration file path to use (/path/to/config.py)
+  {start,stop,restart,reload,status}
+<BLANKLINE>
+optional arguments:
+  -v, --version         show program's version number and exit
+  -h, --help            show program's help text and exit
+
+```
+Show pyservice help with flag --help
+>>> sys.argv = list()
+>>> sys.argv.append('pyservice.py')
+>>> sys.argv.append('--help')
+>>> runner.run_service()
+usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
+<BLANKLINE>
+positional arguments:
+  process               process class path to run (modulename.ProcessClass) or
+                        configuration file path to use (/path/to/config.py)
+  {start,stop,restart,reload,status}
+<BLANKLINE>
+optional arguments:
+  -v, --version         show program's version number and exit
+  -h, --help            show program's help text and exit
+
+```
+Triyng to run dummy process but without action
+>>> sys.argv = list()
+>>> sys.argv.append('pyservice.py')
+>>> sys.argv.append('dummy_process')
+>>> runner.run_service()
+usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
+<BLANKLINE>
+positional arguments:
+  process               process class path to run (modulename.ProcessClass) or
+                        configuration file path to use (/path/to/config.py)
+  {start,stop,restart,reload,status}
+<BLANKLINE>
+optional arguments:
+  -v, --version         show program's version number and exit
+  -h, --help            show program's help text and exit
+
+```
+Triyng to run dummy process
+>>> sys.argv = list()
+>>> sys.argv.append('pyservice.py')
+>>> sys.argv.append('dummy_process')
+>>> sys.argv.append('start')
+>>> runner.run_service()
+usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
+pyservice: error: Invalid process path: dummy_process
+
+```
 
 
