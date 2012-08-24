@@ -10,6 +10,11 @@ The "ControlInterface" class models the commands you can use to start or control
 The runner module (runner.py) and command line utilities (pyservice) are completely optional. You can always just write your own Python script or console command that takes your application service.
 
 
+```
+$ python -m pyservice tests.processes.simple_process.SimpleProcess start
+```
+
+
 ### TODO
 
  - handle cases correctly when process is killed
