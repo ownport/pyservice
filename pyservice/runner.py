@@ -37,7 +37,7 @@ def run_service():
         if args.process and args.action in "start stop restart reload status".split():
             if not args.process:
                 parser.error("You need to specify a process for {}".format(args.action))
-            getattr(ServiceControl(), args.action)(args.process)
+            getattr(ServiceControl(args.process), args.action)()
         else:
             parser.print_help()
     except RuntimeError, e:
@@ -45,26 +45,30 @@ def run_service():
     
 class ServiceControl(object):
     
-    def start(self, process_path):
-        ''' start process '''
+    def __init__(self, process_path):
+        self.process = load_process(process_path)
+        if not callable(self.process):
+            raise RuntimeError("The process {} is not valid".format(self.process_path))    
+    
+    def start(self):
         
-        print "Starting process with {}...".format(process_path)
-        process = load_process(process_path)
-        if callable(process):
-            pyservice.core.Service(process).start()
-        else:
-            raise RuntimeError("The process {} is not valid".format(process_path))    
+        print "Starting process with {}...".format(self.process.__name__)
+        pyservice.core.Service(self.process).start()
                 
-    def stop(self, process_path):
-        if self._validate(pid):
-            print "Stopping process {}...".format(pid)
-            os.kill(pid, STOP_SIGNAL)
+    def stop(self):
+
+        print "Stopping process {}...".format(self.process.__name__)
+        pyservice.core.Service(self.process).stop()
             
-    def restart(self, process_path):
-        self.stop(resolve_pid(target=target))
-        self.start(target)
+    def restart(self):
+
+        print 'Restarting {} process'.format(self.process.__name__)
+        self.stop()
+        self.start()
+        print 'Process {} was restarted'.format(self.process.__name__)
 
     def status(self, process_path):
+
         if self._validate(pid):
             print "Process is running as {}.".format(pid)
 
