@@ -112,6 +112,7 @@ class Service(object):
         """
         Start the service
         """
+        
         # Check for a pidfile to see if the service already runs
         current_pid = self.pidfile.validate()
         if current_pid:
@@ -125,6 +126,7 @@ class Service(object):
             try:
                 self.pidfile.create()
             except RuntimeError, err:
+                # TODO <ERROR> service.start(), /tests/run doesn't exist. Can't create pidfile.
                 logging.error('service.start(), %s' % str(err))
                 return
             logging.info('service.start(), process [%s] started' % self.process.__name__)
