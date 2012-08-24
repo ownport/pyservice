@@ -10,6 +10,7 @@ import resource
 
 from .utils import Pidfile
 from .utils import set_logging
+from .utils import logging_file_descriptors
 
 sys.path.insert(0, os.getcwd())
 
@@ -61,16 +62,35 @@ class Service(object):
         Programming in the UNIX Environment" for details (ISBN 0201563177)
         http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
         """
-        # TODO handle file descriptors, logging
-        
-        # Default maximum for the number of available file descriptors.
-        MAXFD = 1024
 
-        # The standard I/O file descriptors are redirected to /dev/null by default.
-        if (hasattr(os, "devnull")):
-            REDIRECT_TO = os.devnull
-        else:
-            REDIRECT_TO = "/dev/null"
+        def _maxfd(limit=1024):
+            ''' Use the getrlimit method to retrieve the maximum file 
+            descriptor number that can be opened by this process. If 
+            there is not limit on the resource, use the default value
+            
+            limit - default maximum for the number of available file descriptors.
+            '''
+            maxfd = resource.getrlimit(resource.RLIMIT_NOFILE)[1]
+            if maxfd == resource.RLIM_INFINITY:
+                return limit
+            else:
+                return maxfd
+        
+        def _devnull(default="/dev/null"):
+            # The standard I/O file descriptors are redirected to /dev/null by default.
+            if hasattr(os, "devnull"):
+                return os.devnull
+            else:
+                return default
+
+        def _close_fds(preserve=None):
+            preserve = preserve or []
+            for fd in xrange(0, _maxfd()):
+                if fd not in preserve:
+                    try:
+                        os.close(fd)
+                    except OSError: # fd wasn't open to begin with (ignored)
+                        pass
 
         pid = self._fork(1) # first fork
         if pid == 0: # the first child
@@ -81,10 +101,11 @@ class Service(object):
                 os.umask(0) 
             else:
                 os._exit(0)
+            _close_fds(logging_file_descriptors())
         else:
             os._exit(0)             
 
-        os.open(REDIRECT_TO, os.O_RDWR)	# standard input (0)
+        os.open(_devnull(), os.O_RDWR)
         os.dup2(0, 1)			# standard output (1)
         os.dup2(0, 2)			# standard error (2)
 
