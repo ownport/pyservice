@@ -8,5 +8,5 @@ class SimpleProcess(pyservice.Process):
     logfile = os.path.join(os.getcwd(), 'tests/log/simple_process.log')
     
     def run(self):
-        for i in range(1000):
-            pass
+        time.sleep(10)
+
