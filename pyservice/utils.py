@@ -76,7 +76,8 @@ class Pidfile(object):
         # Write pidfile
         fdir = os.path.dirname(self.fname)
         if fdir and not os.path.isdir(fdir):
-            raise RuntimeError("%s doesn't exist. Can't create pidfile." % fdir)
+            raise RuntimeError(
+                    "%s doesn't exist. Can't create pidfile %s" % (fdir, self.fname))
 
         pfile = open(self.fname,'w')
         pfile.write("%s\n" % self.pid)

@@ -117,7 +117,6 @@ class Service(object):
             try:
                 self.pidfile.create()
             except RuntimeError, err:
-                # TODO <ERROR> service.start(), /tests/run doesn't exist. Can't create pidfile.
                 logging.error('service.start(), %s' % str(err))
                 return
             # activate handler for stop the process
