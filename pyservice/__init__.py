@@ -29,5 +29,3 @@ from pyservice.core import Service
 
 __all__ = ['Process', 'Service']
 
-
-# TODO run pyservice as python -m pyservice
