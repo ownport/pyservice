@@ -46,7 +46,7 @@ class RunnerTests(unittest.TestCase):
 class ServiceControlTests(unittest.TestCase):
     
     def test_service_control_start(self):
-        self.assertEqual(runner.ServiceControl().start('tests.processes.simple_process.SimpleProcess'), None)
+        self.assertEqual(runner.ServiceControl('tests.processes.simple_process.SimpleProcess').start(), None)
 
     
 
