@@ -74,8 +74,8 @@ class ServiceControl(object):
             try:
                 os.kill(pid, 0)
                 print 'Process {} is running, pid: {}'.format(srv.process.__name__, pid)
+                return
             except (OSError, TypeError):
-                print "Process is NOT running."
-        else:
-            print 'Process {} is not running'.format(srv.process.__name__)
+                pass
+        print "Process is not running".format(srv.process.__name__)
                     
