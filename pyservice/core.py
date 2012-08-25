@@ -20,10 +20,12 @@ sys.path.insert(0, os.getcwd())
 class Process(object):
     
     # TODO add support to logging process by own name
-    # TODO handling signal.SIGTERM correctly, it should be controlled kill process
     
     pidfile = None  # Override this field for your class
     logfile = None  # Override this field for your class
+    
+    def __init__(self):
+        atexit.register(self.do_stop())
     
     def do_start(self):
         ''' You should override this method when you subclass Process. 
@@ -152,8 +154,10 @@ class Service(object):
             atexit.register(self.remove_pid)
             
             logging.info('service.start(), process [%s] started' % self.process.__name__)
-            self.process().run()
-
+            user_process = self.process()
+            if getattr(user_process, 'do_start'):
+                user_process.do_start()
+            user_process.run()
 
     def stop(self):
         '''
@@ -162,7 +166,6 @@ class Service(object):
         pid = self.pidfile.validate()
         if not pid:
             message = "service.stop(), pidfile %s does not exist. Service is not running"
-            # sys.stderr.write(message % self.__pidfile)
             logging.error(message % self.pidfile.fname)
             return # not an error in a restart
 
