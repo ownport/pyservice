@@ -7,8 +7,6 @@ from pyservice.utils import load_process
 
 
 def run_service():
-    # TODO fix issue with correct help presentation when process is not exist
-    # TODO incorrect handling when pid file is empty or None
 
     import argparse
 
