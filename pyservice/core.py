@@ -20,6 +20,7 @@ sys.path.insert(0, os.getcwd())
 class Process(object):
     
     # TODO add support to logging process by own name
+    # TODO handling signal.SIGTERM correctly, it should be controlled kill process
     
     pidfile = None  # Override this field for your class
     logfile = None  # Override this field for your class
