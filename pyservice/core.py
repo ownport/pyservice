@@ -25,16 +25,27 @@ class Process(object):
     pidfile = None  # Override this field for your class
     logfile = None  # Override this field for your class
     
+    def do_start(self):
+        ''' You should override this method when you subclass Process. 
+        It will be called before the process will be runned via Service class. '''
+        pass
+
+    def do_stop(self):
+        ''' You should override this method when you subclass Process. 
+        It will be called after the process has been stopped or interupted by 
+        signal.SIGTERM'''
+        pass
+    
     def run(self):
-        """
+        '''
         You should override this method when you subclass Process. 
         It will be called after the process has been daemonized by 
         start() or restart() via Service class.
-        """
+        '''
         pass
 
 class Service(object):
-    """ Service class  """
+    ''' Service class  '''
     
     def __init__(self, process):
         ''' init '''
@@ -58,11 +69,11 @@ class Service(object):
         return pid
     
     def daemonize(self):
-        """
+        '''
         do the UNIX double-fork magic, see Stevens' "Advanced 
         Programming in the UNIX Environment" for details (ISBN 0201563177)
         http://www.erlenstar.demon.co.uk/unix/faq_2.html#SEC16
-        """
+        '''
 
         def _maxfd(limit=1024):
             ''' Use the getrlimit method to retrieve the maximum file 
@@ -118,9 +129,9 @@ class Service(object):
         logging.info('service.remove_pid(), service was stopped')
 
     def start(self):
-        """
+        '''
         Start the service
-        """
+        '''
         
         # Check for a pidfile to see if the service already runs
         current_pid = self.pidfile.validate()
@@ -145,9 +156,9 @@ class Service(object):
 
 
     def stop(self):
-        """
+        '''
         Stop the service
-        """
+        '''
         pid = self.pidfile.validate()
         if not pid:
             message = "service.stop(), pidfile %s does not exist. Service is not running"
