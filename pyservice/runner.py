@@ -1,5 +1,6 @@
 """ pyservice runner """
 
+import os
 import sys
 import pyservice
 
@@ -66,16 +67,15 @@ class ServiceControl(object):
         self.start()
         print 'Process {} was restarted'.format(self.process.__name__)
 
-    def status(self, process_path):
-
-        if self._validate(pid):
-            print "Process is running as {}.".format(pid)
-
-    def _validate(self, process_path):
-        try:
-            os.kill(pid, 0)
-            return pid
-        except (OSError, TypeError):
-            print "Process is NOT running."
-
-
+    def status(self):
+        srv = pyservice.core.Service(self.process)
+        pid = srv.pidfile.validate()
+        if pid:
+            try:
+                os.kill(pid, 0)
+                print 'Process {} is running, pid: {}'.format(srv.process.__name__, pid)
+            except (OSError, TypeError):
+                print "Process is NOT running."
+        else:
+            print 'Process {} is not running'.format(srv.process.__name__)
+                    
