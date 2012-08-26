@@ -28,7 +28,7 @@ class SimpleProcess(pyservice.Process):
         time.sleep(10)
 ```
 
-To run this process as service in command line you just need to type
+To run this process as service you just need to type in command line 
 ```
 $ python -m pyservice tests.processes.simple_process.SimpleProcess start
 ```
