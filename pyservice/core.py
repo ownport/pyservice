@@ -177,8 +177,7 @@ class Service(object):
         except OSError, err:
             err = str(err)
             if err.find("No such process") > 0:
-                if self.pidfile.validate():
-                    self.pidfile.unlink()
+                self.pidfile.unlink()
             else:
                 loggin.error('service.stop(), %s' % str(err))
                 raise OSError(err)

@@ -104,7 +104,7 @@ class Pidfile(object):
 
     def validate(self):
         """ Validate pidfile and make it stale if needed"""
-        # TODO reveiw the code
+
         if not self.fname:
             return
         try:
