@@ -19,8 +19,6 @@ sys.path.insert(0, os.getcwd())
 # -----------------------------------------------------
 class Process(object):
     
-    # TODO add support to logging process by own name
-    
     pidfile = None  # Override this field for your class
     logfile = None  # Override this field for your class
     
@@ -55,7 +53,7 @@ class Service(object):
         self.process = process
         self.pidfile = Pidfile(process.pidfile)
         if process.logfile:
-            set_logging(process.logfile)  
+            set_logging(process.__name__, process.logfile)  
             self.logger = logging.getLogger(process.__name__)          
 
 
@@ -128,7 +126,7 @@ class Service(object):
     def remove_pid(self):
         if self.pidfile.validate():
             self.pidfile.unlink()
-        logging.info('service.remove_pid(), service was stopped')
+        logging.info('the task completed, service was stopped')
 
     def start(self):
         '''
@@ -138,7 +136,7 @@ class Service(object):
         # Check for a pidfile to see if the service already runs
         current_pid = self.pidfile.validate()
         if current_pid:
-            message = "service.start(), pidfile %s exists. Service is running already"
+            message = "pidfile %s exists. Service is running already"
             logging.error(message % current_pid)
             return
 
@@ -148,12 +146,12 @@ class Service(object):
             try:
                 self.pidfile.create()
             except RuntimeError, err:
-                logging.error('service.start(), %s' % str(err))
+                logging.error('Error during service start, %s' % str(err))
                 return
             # activate handler for stop the process
             atexit.register(self.remove_pid)
             
-            logging.info('service.start(), process [%s] started' % self.process.__name__)
+            logging.info('process [%s] started' % self.process.__name__)
             user_process = self.process()
             if getattr(user_process, 'do_start'):
                 user_process.do_start()
@@ -165,7 +163,7 @@ class Service(object):
         '''
         pid = self.pidfile.validate()
         if not pid:
-            message = "service.stop(), pidfile %s does not exist. Service is not running"
+            message = "pidfile %s does not exist. Service is not running"
             logging.error(message % self.pidfile.fname)
             return # not an error in a restart
 
@@ -179,9 +177,9 @@ class Service(object):
             if err.find("No such process") > 0:
                 self.pidfile.unlink()
             else:
-                loggin.error('service.stop(), %s' % str(err))
+                loggin.error('Error during service stop, %s' % str(err))
                 raise OSError(err)
-        logging.info('service.stop(), service [%s] was stopped' % pid)
+        logging.info('service [%s] was stopped by SIGTERM signal' % pid)
 
 
 

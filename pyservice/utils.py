@@ -10,14 +10,15 @@ import logging
 #   Logging
 #
 
-# TODO make logging more useful for debugging
+DEFAULT_FORMAT = "%(asctime)s pid:%(process)d/{} <%(levelname)s> %(message)s"
 
-DEFAULT_FORMAT = "%(asctime)s pid:%(process)d <%(levelname)s> %(message)s"
-
-def set_logging(logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
+def set_logging(process_name, logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
     ''' set logging '''
-    
-    logging.basicConfig(format=output_format, filename = logfile, level=logging.DEBUG)
+    output_format = output_format.format(process_name)
+    logging.basicConfig(
+                format=output_format, 
+                filename = logfile, 
+                level=logging.DEBUG)
 
 def logging_file_descriptors():
     ''' logging file descriptors are used in core.Service.daemonize() '''
