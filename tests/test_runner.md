@@ -14,7 +14,7 @@ Show pyservice version with flag -v
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('-v')
 >>> runner.run_service()
-pyservice, v.0.2.1
+pyservice, v.0.3
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -35,7 +35,7 @@ Show pyservice version with flag --version
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('--version')
 >>> runner.run_service()
-pyservice, v.0.2.1
+pyservice, v.0.3
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
