@@ -62,10 +62,8 @@ class ServiceControl(object):
             
     def restart(self):
 
-        print 'Restarting {} process'.format(self.process.__name__)
         self.stop()
         self.start()
-        print 'Process {} was restarted'.format(self.process.__name__)
 
     def status(self):
         srv = pyservice.core.Service(self.process)
