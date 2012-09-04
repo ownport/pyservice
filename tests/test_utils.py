@@ -1,8 +1,8 @@
 import os
 import unittest
 
-from pyservice.utils import Pidfile
-from pyservice.utils import load_process
+from pyservice import Pidfile
+from pyservice import load_process
 
 
 class UtilsTests(unittest.TestCase):

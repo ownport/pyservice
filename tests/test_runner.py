@@ -1,13 +1,13 @@
 import sys
 import unittest
 
-from pyservice import runner
 from cStringIO import StringIO
+from pyservice import ServiceControl
 
 class ServiceControlTests(unittest.TestCase):
     
     def test_service_control_start(self):
-        self.assertEqual(runner.ServiceControl('tests.processes.simple_process.SimpleProcess').start(), None)
+        self.assertEqual(ServiceControl('tests.processes.simple_process.SimpleProcess').start(), None)
 
     
 if __name__ == '__main__':

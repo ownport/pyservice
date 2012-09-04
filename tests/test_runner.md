@@ -3,7 +3,7 @@
 Before any tests or playing examples, the modules `pyservice.runner` and `sys` should be imported. Monkey patching is used for sys.exit to avoid exit from command
 ```
 >>> import sys
->>> from pyservice import runner
+>>> from pyservice import run_service
 >>> sys.stderr = sys.stdout
 >>> sys.exit = lambda x:x
 >>>
@@ -13,8 +13,8 @@ Show pyservice version with flag -v
 >>> sys.argv = list()
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('-v')
->>> runner.run_service()
-pyservice, v.0.3
+>>> run_service()
+pyservice, v.0.4
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -34,8 +34,8 @@ Show pyservice version with flag --version
 >>> sys.argv = list()
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('--version')
->>> runner.run_service()
-pyservice, v.0.3
+>>> run_service()
+pyservice, v.0.4
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -52,7 +52,7 @@ Show pyservice help with flag -h
 >>> sys.argv = list()
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('-h')
->>> runner.run_service()
+>>> run_service()
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -69,7 +69,7 @@ Show pyservice help with flag --help
 >>> sys.argv = list()
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('--help')
->>> runner.run_service()
+>>> run_service()
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -86,7 +86,7 @@ Triyng to run dummy process but without action
 >>> sys.argv = list()
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('dummy_process')
->>> runner.run_service()
+>>> run_service()
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 <BLANKLINE>
 positional arguments:
@@ -104,7 +104,7 @@ Triyng to run dummy process
 >>> sys.argv.append('pyservice.py')
 >>> sys.argv.append('dummy_process')
 >>> sys.argv.append('start')
->>> runner.run_service()
+>>> run_service()
 usage: pyservice [-v] [-h] [process] [{start,stop,restart,reload,status}]
 pyservice: error: Invalid process path: dummy_process
 
