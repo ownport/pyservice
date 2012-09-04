@@ -24,8 +24,8 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE."""
 
-from pyservice.core import Process
-from pyservice.core import Service
+from .core import Process
+from .core import Service
 
 __all__ = ['Process', 'Service']
 

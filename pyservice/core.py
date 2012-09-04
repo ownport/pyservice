@@ -14,6 +14,8 @@ from .utils import logging_file_descriptors
 
 sys.path.insert(0, os.getcwd())
 
+# TODO review to use multiprocessing for creation daemon process
+
 # -----------------------------------------------------
 #   classes
 # -----------------------------------------------------
