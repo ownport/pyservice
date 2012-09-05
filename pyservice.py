@@ -166,6 +166,7 @@ class Service(object):
         if current_pid:
             message = "pidfile %s exists. Service is running already"
             logging.error(message % current_pid)
+            print message % current_pid
             return
 
         # Start the service
@@ -175,15 +176,21 @@ class Service(object):
                 self.pidfile.create()
             except RuntimeError, err:
                 logging.error('Error during service start, %s' % str(err))
+                print 'Error during service start, %s' % str(err)
                 return
             # activate handler for stop the process
             atexit.register(self.remove_pid)
-            
+
+            try:            
+                user_process = self.process()
+                if getattr(user_process, 'do_start'):
+                    user_process.do_start()
+                user_process.run()
+            except Exception, err:
+                logging.error(err)
+                print err
+                return
             logging.info('process [%s] started' % self.process.__name__)
-            user_process = self.process()
-            if getattr(user_process, 'do_start'):
-                user_process.do_start()
-            user_process.run()
 
     def stop(self):
         '''
@@ -370,8 +377,10 @@ def load_process(process_path):
     except KeyError, e:
         raise RuntimeError("Unable to find process in module: {}".format(process_path))
                     
-def run_service():
+def run_service(*args):
 
+    # TODO add possibility to embedd pyservice in code
+    
     import argparse
 
     parser = argparse.ArgumentParser(prog="pyservice", add_help=False)
