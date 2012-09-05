@@ -391,8 +391,6 @@ def service(process=None, action=None):
 
 
 def main():
-    # TODO add possibility to embedd pyservice in code
-    
     import argparse
 
     parser = argparse.ArgumentParser(prog="pyservice", add_help=False)
