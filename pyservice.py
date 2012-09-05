@@ -166,7 +166,7 @@ class Service(object):
         if current_pid:
             message = "pidfile %s exists. Service is running already"
             logging.error(message % current_pid)
-            print message % current_pid
+            print >> sys.stderr, message % current_pid
             return
 
         # Start the service
@@ -176,7 +176,7 @@ class Service(object):
                 self.pidfile.create()
             except RuntimeError, err:
                 logging.error('Error during service start, %s' % str(err))
-                print 'Error during service start, %s' % str(err)
+                print >> sys.stderr, 'Error during service start, %s' % str(err)
                 return
             # activate handler for stop the process
             atexit.register(self.remove_pid)
@@ -191,6 +191,7 @@ class Service(object):
                 print err
                 return
             logging.info('process [%s] started' % self.process.__name__)
+            print >> sys.stdout, 'process [%s] started' % self.process.__name__
 
     def stop(self):
         '''
