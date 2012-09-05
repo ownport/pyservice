@@ -24,5 +24,5 @@ graph:
 	dot -T png docs/pyservice.gv -o docs/pyservice.png && eog docs/pyservice.png
 
 todo:
-	@ grep '# TODO' pyservice/*
+	@ grep '# TODO' pyservice.py
 	
