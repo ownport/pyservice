@@ -40,8 +40,6 @@ import resource
 
 sys.path.insert(0, os.getcwd())
 
-# TODO review to use multiprocessing for creation daemon process
-
 # -----------------------------------------------------
 #   classes
 # -----------------------------------------------------
