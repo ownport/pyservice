@@ -37,7 +37,7 @@ $ python -m pyservice tests.processes.simple_process.SimpleProcess start
 
 The "ControlInterface" class models the commands you can use to start or control a daemonized service. This is exposed via one command line utilities "pyservice" which have the entry point defined in this module.
 
-The runner module (runner.py) and command line utilities (pyservice) are completely optional. You can always just write your own Python script or console command that takes your application service.
+The runner module and command line utilities are completely optional. You can always just write your own Python script or console command that takes your application service.
 
 ### Links
 
