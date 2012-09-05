@@ -289,9 +289,8 @@ class Pidfile(object):
         try:
             with open(self.fname, "r") as f:
                 pid_in_file =  int(f.read() or 0)
-
-            if pid_in_file == self.pid:
-                os.unlink(self.fname)
+            
+            os.unlink(self.fname)
         except:
             pass
 
@@ -318,8 +317,6 @@ class Pidfile(object):
             if e[0] == errno.ENOENT:
                 return
             raise
-
-
 
 # ---------------------------------------------------
 #   Utils
