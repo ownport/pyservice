@@ -382,8 +382,15 @@ def load_process(process_path):
     except KeyError, e:
         raise RuntimeError("Unable to find process in module: {}".format(process_path))
                     
-def run_service(*args):
+def service(process=None, action=None):
+    ''' control service '''
+    try:
+        getattr(ServiceControl(process), action)()
+    except RuntimeError, e:
+        print >> sys.stderr, e
 
+
+def main():
     # TODO add possibility to embedd pyservice in code
     
     import argparse
@@ -398,7 +405,7 @@ def run_service(*args):
         configuration file path to use (/path/to/config.py)
         """.strip())
     parser.add_argument("action", nargs='?', 
-        choices="start stop restart reload status".split()) 
+        choices="start stop restart status".split()) 
     
     try:        
         args = parser.parse_args()
@@ -410,17 +417,13 @@ def run_service(*args):
         parser.print_help()
         return
 
-    try:
-        if args.process and args.action in "start stop restart reload status".split():
-            if not args.process:
-                parser.error("You need to specify a process for {}".format(args.action))
-            getattr(ServiceControl(args.process), args.action)()
-        else:
-            parser.print_help()
-    except RuntimeError, e:
-        parser.error(e)    
-
+    if args.process and args.action in "start stop restart status".split():
+        if not args.process:
+            parser.error("You need to specify a process for {}".format(args.action))
+        service(args.process, args.action)
+    else:
+        parser.print_help()
 
 if __name__ == '__main__':
-    run_service()
+    main()
 
