@@ -346,6 +346,10 @@ def logging_file_descriptors():
     return [handler.stream.fileno() for handler in [wr() for wr in
             logging._handlerList] if isinstance(handler, logging.FileHandler)]
 
+#
+#   Working with processes
+#
+
 def load_process(process_path):
     ''' load process 
     
