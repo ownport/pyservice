@@ -39,6 +39,10 @@ The "ControlInterface" class models the commands you can use to start or control
 
 The runner module and command line utilities are completely optional. You can always just write your own Python script or console command that takes your application service.
 
+## Examples
+
+ - [How to run built-in HTTP server of bottle.py as service in background](https://github.com/ownport/pyservice/tree/master/examples/bottlepy-daemon)
+
 ### Links
 
  - [How do I get my program to act like a daemon?](http://www.svbug.com/documentation/comp.unix.programmer-FAQ/faq_2.html#SEC16)
