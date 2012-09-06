@@ -9,7 +9,7 @@ The pyservice is responsible for creating a "container" to run services in, and 
 
 ## Installation
 
-TODO
+To install pyservice just download pyservice.py and place it in your project directory. There are no dependencies other than the Python Standard Library.
 
 ## How to start to use
 
