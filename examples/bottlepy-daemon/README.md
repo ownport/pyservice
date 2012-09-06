@@ -9,59 +9,22 @@ There's two ways how to control bottle.py HTTP server:
  - or directly via bottled.py
 
 *Note!* All below commands should be executed from examples/bottlepy-daemon directory
- 
-To start bottled.py via pyservice console:
-```
-$ python -m packages.pyservice bottled.BottleProcess start
-Starting process with BottleProcess...
-$
 ``` 
-or 
-```
-$ python bottled.py start
-Starting process with BottleProcess...
-$
-``` 
+$ python -m packages.pysevice bottled.BottleProcess
+usage: pyservice [-v] [-h] [process] [{start,stop,restart,status}]
 
-Check current status
-```
-$ python -m packages.pyservice bottled.BottleProcess status
-Process BottleProcess is running, pid: 27688
-$
-``` 
-or 
-```
-$ python bottled.py status
-Process BottleProcess is running, pid: 27706
-$
-``` 
+positional arguments:
+  process               process class path to run (modulename.ProcessClass) or
+                        configuration file path to use (/path/to/config.py)
+  {start,stop,restart,status}
 
-Restart the bottled.py process
+optional arguments:
+  -v, --version         show program's version number and exit
+  -h, --help            show program's help text and exit
 ```
-$ python -m packages.pyservice bottled.BottleProcess restart
-Stopping process BottleProcess...
-Starting process with BottleProcess...
-$
-``` 
-or 
+Or
 ```
-$ python bottled.py restart
-Stopping process BottleProcess...
-Starting process with BottleProcess...
-$
-``` 
-
-Stop the process
+$ python bottled.py 
+usage: bottled <start,stop,restart,status>
 ```
-$ python -m packages.pyservice bottled.BottleProcess stop
-Stopping process BottleProcess...
-$
-``` 
-or 
-```
-$ python bottled.py stop
-Stopping process BottleProcess...
-$
-``` 
-
 
