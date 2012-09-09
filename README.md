@@ -49,3 +49,4 @@ The runner module and command line utilities are completely optional. You can al
  - [PEP: 3143, Standard daemon process library](http://www.python.org/dev/peps/pep-3143/)
  - [Building a python daemon process](http://www.gavinj.net/2012/06/building-python-daemon-process.html)
  - [Creating a daemon the Python way (Python recipe)](http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/)
+ - [start-stop-daemon](http://man.he.net/man8/start-stop-daemon)
