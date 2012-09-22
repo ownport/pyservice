@@ -38,6 +38,8 @@ import atexit
 import logging
 import resource
 
+# TODO support configuration file for service
+
 sys.path.insert(0, os.getcwd())
 
 # -----------------------------------------------------
