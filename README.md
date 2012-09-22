@@ -43,6 +43,10 @@ The runner module and command line utilities are completely optional. You can al
 
  - [How to run built-in HTTP server of bottle.py as service in background](https://github.com/ownport/pyservice/tree/master/examples/bottlepy-daemon)
 
+## Where is it used?
+
+ - [pywebase](https://github.com/ownport/pywebase) Small platform for local web applications
+
 ### Links
 
  - [How do I get my program to act like a daemon?](http://www.svbug.com/documentation/comp.unix.programmer-FAQ/faq_2.html#SEC16)
