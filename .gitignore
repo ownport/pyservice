@@ -26,9 +26,12 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-# logs
+logs
 *.log
+
 
 # pid
 tests/run/*
 *.pid
+run
+
