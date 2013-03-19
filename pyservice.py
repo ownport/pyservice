@@ -314,11 +314,11 @@ class Pidfile(object):
                 except OSError, e:
                     if e[0] == errno.ESRCH:
                         return
-                    raise
+                    raise e
         except IOError, e:
             if e[0] == errno.ENOENT:
                 return
-            raise
+            raise e
 
 # ---------------------------------------------------
 #   Utils
@@ -366,7 +366,7 @@ def load_process(process_path):
         import traceback, pkgutil
         tb_tups = traceback.extract_tb(sys.exc_info()[2])
         if pkgutil.__file__.startswith(tb_tups[-1][0]):
-            # If the bottommost frame in our stack was in pkgutil,
+            # If the bottom most frame in our stack was in pkgutil,
             # then we can safely say that this ImportError occurred
             # because the top level class path was not found.
             raise RuntimeError("Unable to load process path: {}:\n{}".format(process_path, e))
