@@ -80,10 +80,7 @@ class Service(object):
         
         self.process = process
         self.pidfile = Pidfile(process.pidfile)
-        if process.logfile:
-            set_logging(process.__name__, process.logfile)  
-            self.logger = logging.getLogger(process.__name__)          
-
+        self.logger = file_logger(process.__name__, process.logfile)          
 
     def _fork(self, fid):
         ''' fid - fork id'''
@@ -330,13 +327,16 @@ class Pidfile(object):
         
 DEFAULT_FORMAT = "%(asctime)s pid:%(process)d/{} <%(levelname)s> %(message)s"
 
-def set_logging(process_name, logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG):
-    ''' set logging '''
-    output_format = output_format.format(process_name)
-    logging.basicConfig(
-                format=output_format, 
-                filename = logfile, 
-                level=logging.DEBUG)
+def file_logger(name, filename):
+    ''' returns file logger
+    '''
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    file_handler = logging.FileHandler(filename)
+    logger.addHandler(file_handler)
+    formatter = logging.Formatter('%(asctime)s %(name)s %(message)s')
+    file_handler.setFormatter(formatter)
+    return logger
 
 def logging_file_descriptors():
     ''' logging file descriptors are used in core.Service.daemonize() '''
