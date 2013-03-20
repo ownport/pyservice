@@ -48,7 +48,7 @@ The runner module and command line utilities are completely optional. You can al
  - [pywebase](https://github.com/ownport/pywebase) Small platform for local web applications
  - [pyactors](https://github.com/ownport/pyactors) Simple implementation actors on python
 
-### Links
+## Links
 
  - [How do I get my program to act like a daemon?](http://www.svbug.com/documentation/comp.unix.programmer-FAQ/faq_2.html#SEC16)
  - [PEP: 3143, Standard daemon process library](http://www.python.org/dev/peps/pep-3143/)
@@ -56,7 +56,7 @@ The runner module and command line utilities are completely optional. You can al
  - [Creating a daemon the Python way (Python recipe)](http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/)
  - [start-stop-daemon](http://man.he.net/man8/start-stop-daemon)
  
-### For developers
+## For developers
 
 For testing purpose `nose` and `coverage` libraries are required
 
