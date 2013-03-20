@@ -9,6 +9,13 @@ def test_file_logger():
         
     logger = file_logger('test_file_logger', 'logs/test_file_logger.log')
     logger.info('test_file_logger message')
+
+    try:
+        logger = file_logger('test_file_logger', None)
+        logger.info('test_file_logger message')
+    except:
+        pass
+    
         
 def test_pidfile():
         
