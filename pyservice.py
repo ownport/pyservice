@@ -26,7 +26,7 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE."""
 
-__all__ = ['Process', 'Service']
+__all__ = ['Process', 'Service', 'service']
 
 import os
 import sys
@@ -73,18 +73,18 @@ class Process(object):
         pass
 
 class Service(object):
-    ''' Service class  '''
-    
+    ''' Service class  
+    '''
     def __init__(self, process):
-        ''' init '''
-        
+        ''' init 
+        '''        
         self.process = process
         self.pidfile = Pidfile(process.pidfile)
         self.logger = file_logger(process.__name__, process.logfile)          
 
     def _fork(self, fid):
-        ''' fid - fork id'''
-        
+        ''' fid - fork id
+        '''        
         try: 
             pid = os.fork() 
         except OSError, e: 
@@ -154,10 +154,8 @@ class Service(object):
         logging.info('the task completed, service was stopped')
 
     def start(self):
-        '''
-        Start the service
-        '''
-        
+        ''' Start the service
+        '''        
         # Check for a pidfile to see if the service already runs
         current_pid = self.pidfile.validate()
         if current_pid:
@@ -259,7 +257,7 @@ class Pidfile(object):
         self.fname = fname
         self.pid = None
 
-    def create(self):
+    def link(self):
         ''' create pid file '''
         pid = self.validate()
         if pid:
