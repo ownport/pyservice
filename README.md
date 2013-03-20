@@ -55,3 +55,12 @@ The runner module and command line utilities are completely optional. You can al
  - [Building a python daemon process](http://www.gavinj.net/2012/06/building-python-daemon-process.html)
  - [Creating a daemon the Python way (Python recipe)](http://code.activestate.com/recipes/278731-creating-a-daemon-the-python-way/)
  - [start-stop-daemon](http://man.he.net/man8/start-stop-daemon)
+ 
+### For developers
+
+For testing purpose `nose` and `coverage` libraries are required
+
+```
+$ pip install nose
+$ pip install coverage
+```
