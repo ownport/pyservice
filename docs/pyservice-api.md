@@ -57,7 +57,7 @@
     The constructor. filename is filename of PID file
 
 
-- `create()`
+- `link()`
 
     create PID file
 
