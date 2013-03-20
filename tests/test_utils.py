@@ -19,8 +19,8 @@ def test_file_logger():
         
 def test_pidfile():
         
-    pid = Pidfile('tests/run/test1.pid')
-    pid.create()
+    pid = Pidfile('run/test1.pid')
+    pid.link()
     assert pid.validate() == os.getpid()
     pid.unlink()
     assert pid.validate() == None
