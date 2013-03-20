@@ -50,6 +50,7 @@ The runner module and command line utilities are completely optional. You can al
 
 ## Links
 
+ - [start−stop−daemon](http://man.cx/start-stop-daemon(8)/) is used to control the creation and termination of system-level processes. Using one of the matching options, start−stop−daemon can be configured to find existing instances of a running process.
  - [How do I get my program to act like a daemon?](http://www.svbug.com/documentation/comp.unix.programmer-FAQ/faq_2.html#SEC16)
  - [PEP: 3143, Standard daemon process library](http://www.python.org/dev/peps/pep-3143/)
  - [Building a python daemon process](http://www.gavinj.net/2012/06/building-python-daemon-process.html)
