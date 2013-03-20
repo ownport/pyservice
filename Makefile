@@ -1,9 +1,9 @@
 # TODO generate final testing report
 
-tests:
+run-tests:
 	@nosetests
 
-tests-with-coverage:
+run-tests-with-coverage:
 	@nosetests --with-coverage 
 
 graph:
