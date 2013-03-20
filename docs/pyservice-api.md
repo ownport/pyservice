@@ -72,9 +72,9 @@
 
 ## Utilities
 
-- `set_logging(process_name, logfile, output_format=DEFAULT_FORMAT, level=logging.DEBUG)`
+- `file_logger(process_name, filename)`
 
-    set logging
+    returns logger for storing data in file
 
 - `logging_file_descriptors()`
 
