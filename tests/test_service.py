@@ -8,12 +8,13 @@ class TestProcess(Process):
     logfile = 'logs/test_service.test_process.pid'
     
     def run(self):
-        pass
+        self.logger.info('TestProcess.run() started')
+        self.logger.info('TestProcess.run() stopped')
 
 
 def test_service_create():
     ''' test_servce.test_service_create
     '''
     
-    test_service = service('TestProcess', 'start')
+    test_service = service('tests.test_service.TestProcess', 'start')
     

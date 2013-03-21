@@ -8,5 +8,7 @@ class SimpleProcess(pyservice.Process):
     logfile = os.path.join(os.getcwd(), 'logs/simple_process.log')
     
     def run(self):
+        self.logger.info('Process.run() started')
         time.sleep(10)
+        self.logger.info('Process.run() stopped')
 
