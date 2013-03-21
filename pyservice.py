@@ -47,12 +47,17 @@ sys.path.insert(0, os.getcwd())
 # -----------------------------------------------------
 class Process(object):
     
-    pidfile = None  # Override this field for your class
-    logfile = None  # Override this field for your class
+    # This field is required to be overrided in target class
+    pidfile = None  
+    
+    # This field is required to be overrided in target class
+    logfile = None 
     
     def __init__(self):
+        ''' __init__
+        '''
         atexit.register(self.do_stop())
-    
+
     def do_start(self):
         ''' You should override this method when you subclass Process. 
         It will be called before the process will be runned via Service class. '''
@@ -80,7 +85,7 @@ class Service(object):
         '''        
         self.process = process
         self.pidfile = Pidfile(process.pidfile)
-        self.logger = file_logger(process.__name__, process.logfile)          
+        self.logger = file_logger(process.__name__, process.logfile)
 
     def _fork(self, fid):
         ''' fid - fork id
@@ -88,7 +93,7 @@ class Service(object):
         try: 
             pid = os.fork() 
         except OSError, e: 
-            logging.error(
+            self.logger.error(
                 "service._fork(), fork #%d failed: %d (%s)\n" % (fid, e.errno, e.strerror))
             raise OSError(e)  
         return pid
@@ -151,7 +156,7 @@ class Service(object):
     def remove_pid(self):
         if self.pidfile.validate():
             self.pidfile.unlink()
-        logging.info('the task completed, service was stopped')
+        self.logger.info('the task completed, service was stopped')
 
     def start(self):
         ''' Start the service
@@ -160,7 +165,7 @@ class Service(object):
         current_pid = self.pidfile.validate()
         if current_pid:
             message = "pidfile %s exists. Service is running already"
-            logging.error(message % current_pid)
+            self.logger.error(message % current_pid)
             print >> sys.stderr, message % current_pid
             return
 
@@ -168,25 +173,30 @@ class Service(object):
         if self.daemonize():
             # create pid file
             try:
-                self.pidfile.create()
+                self.pidfile.link()
             except RuntimeError, err:
-                logging.error('Error during service start, %s' % str(err))
+                self.logger.error('Error during service start, %s' % str(err))
                 print >> sys.stderr, 'Error during service start, %s' % str(err)
                 return
             # activate handler for stop the process
             atexit.register(self.remove_pid)
 
             try:            
+                self.logger.info('process [%s] starting' % self.process.__name__)
                 user_process = self.process()
+                user_process.logger = self.logger
                 if getattr(user_process, 'do_start'):
                     user_process.do_start()
-                user_process.run()
+                if getattr(user_process, 'run'):
+                    user_process.run()
+                else:
+                    msg = 'Method run() is not defined for the process: %s' % self.process 
+                    self.logger.error(msg)
+                    raise RuntimeError(msg)
             except Exception, err:
-                logging.error(err)
+                self.logger.error(err)
                 print err
                 return
-            logging.info('process [%s] started' % self.process.__name__)
-            print >> sys.stdout, 'process [%s] started' % self.process.__name__
 
     def stop(self):
         '''
@@ -195,7 +205,7 @@ class Service(object):
         pid = self.pidfile.validate()
         if not pid:
             message = "pidfile %s does not exist. Service is not running"
-            logging.error(message % self.pidfile.fname)
+            self.logger.error(message % self.pidfile.fname)
             return # not an error in a restart
 
         # Try killing the service process    
@@ -208,9 +218,9 @@ class Service(object):
             if err.find("No such process") > 0:
                 self.pidfile.unlink()
             else:
-                loggin.error('Error during service stop, %s' % str(err))
+                self.logger.error('Error during service stop, %s' % str(err))
                 raise OSError(err)
-        logging.info('service [%s] was stopped by SIGTERM signal' % pid)
+        self.logger.info('service [%s] was stopped by SIGTERM signal' % pid)
     
 class ServiceControl(object):
     
