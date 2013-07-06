@@ -13,7 +13,7 @@ setup(
     long_description = open('README.md').read(),
     license = "BSD",
     keywords = "python service daemon",
-    py_modules = ['service'],
+    py_modules = ['pyservice'],
     classifiers = [
         'Programming Language :: Python',
         'Intended Audience :: Developers',
